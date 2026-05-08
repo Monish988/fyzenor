@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    if: github.event_name == 'pull_request'
+    name: Formatting and lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Collect changed files
+        id: changed
+        if: github.event_name == 'pull_request'
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **/*.cpp
+            **/*.cc
+            **/*.cxx
+            **/*.h
+            **/*.hpp
+            install.sh
+
+      - name: Install lint dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format shellcheck
+
+      - name: Check C++ formatting
+        if: steps.changed.outputs.any_changed == 'true'
+        env:
+          CHANGED_CPP_FILES: ${{ steps.changed.outputs.all_changed_files }}
+        run: |
+          files=""
+          for file in $CHANGED_CPP_FILES; do
+            case "$file" in
+              *.cpp|*.cc|*.cxx|*.h|*.hpp)
+                files="$files $file"
+                ;;
+            esac
+          done
+          if [ -z "$files" ]; then
+            echo "No C++ files changed."
+            exit 0
+          fi
+          clang-format --dry-run --Werror $files
+
+      - name: Check shell script syntax
+        run: bash -n install.sh
+
+      - name: Run shellcheck
+        if: github.event_name != 'pull_request' || contains(steps.changed.outputs.all_changed_files, 'install.sh')
+        run: shellcheck install.sh
+
+  build-and-check:
+    name: Build and smoke check (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: g++
+            output: fyzenor
+            install_cmd: sudo apt-get update && sudo apt-get install -y g++ libncursesw5-dev
+            link_flags: -lncursesw -lpthread
+            archive_cmd: tar -czf fyzenor-linux.tar.gz fyzenor LICENSE README.md
+            artifact_name: fyzenor-linux
+            asset_name: fyzenor-linux.tar.gz
+          - os: macos-latest
+            compiler: clang++
+            output: fyzenor
+            install_cmd: true
+            link_flags: -lncurses -lpthread
+            archive_cmd: tar -czf fyzenor-macos.tar.gz fyzenor LICENSE README.md
+            artifact_name: fyzenor-macos
+            asset_name: fyzenor-macos.tar.gz
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: ${{ matrix.install_cmd }}
+
+      - name: Build Fyzenor
+        run: ${{ matrix.compiler }} -std=c++17 -O3 file_manager.cpp -o ${{ matrix.output }} ${{ matrix.link_flags }}
+
+      - name: Smoke test version output
+        run: ./fyzenor --version
+
+      - name: Smoke test help output
+        run: ./fyzenor --help
+
+      - name: Package artifact
+        run: ${{ matrix.archive_cmd }}
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.asset_name }}
+          if-no-files-found: error

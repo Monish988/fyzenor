@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Fyzenor Discussions via GitHub Issues
+    url: https://github.com/Bimbok/fyzenor/issues
+    about: Use issues for bugs, ideas, and project discussion.

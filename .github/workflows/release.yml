@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build release asset (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: g++
+            output: fyzenor
+            install_cmd: sudo apt-get update && sudo apt-get install -y g++ libncursesw5-dev
+            link_flags: -lncursesw -lpthread
+            asset_name: fyzenor-linux.tar.gz
+            artifact_name: fyzenor-linux
+          - os: macos-latest
+            compiler: clang++
+            output: fyzenor
+            install_cmd: true
+            link_flags: -lncurses -lpthread
+            asset_name: fyzenor-macos.tar.gz
+            artifact_name: fyzenor-macos
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: ${{ matrix.install_cmd }}
+
+      - name: Build Fyzenor
+        run: ${{ matrix.compiler }} -std=c++17 -O3 file_manager.cpp -o ${{ matrix.output }} ${{ matrix.link_flags }}
+
+      - name: Smoke test version output
+        run: ./fyzenor --version
+
+      - name: Smoke test help output
+        run: ./fyzenor --help
+
+      - name: Package release asset
+        run: tar -czf ${{ matrix.asset_name }} fyzenor LICENSE README.md
+
+      - name: Upload release workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.asset_name }}
+          if-no-files-found: error
+
+  publish-release:
+    name: Publish GitHub release
+    runs-on: ubuntu-latest
+    needs: build-release
+
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Publish GitHub release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*/*
+          generate_release_notes: true
