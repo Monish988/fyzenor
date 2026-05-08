@@ -5,7 +5,6 @@
 ```
 
 <div align="center">
-
 <img src="fyzenor.png" alt="Fyzenor Logo" width="220px">
 
 # Fyzenor
@@ -64,21 +63,21 @@ With its asynchronous architecture, Fyzenor ensures that heavy operations like d
 
 ## 🚀 Key Features
 
-| Feature | Description |
-| --- | --- |
-| **Three-Column Layout** | Navigate with a Miller-style layout showing pinned items, parent/current directories, and a live preview pane. |
-| **Async Media Preview** | Generate image and video previews in the background using the Kitty Graphics Protocol and `ffmpeg`, without freezing navigation. |
-| **Modern & Polished UI** | A clean, minimal interface featuring rounded corners, optimized spacing, and an elegant color palette designed for long-term readability and comfort. |
-| **Syntax-Aware Text Preview** | Preview code and text files with `bat` or `batcat`, with fallback to plain text when needed. |
-| **Background Folder Sizing** | Directory sizes are calculated asynchronously and update in place while you keep moving. |
-| **Vim-Style Navigation** | Fast keyboard-driven navigation with `h`, `j`, `k`, `l`, `g`, `G`, arrow keys, and enter-based traversal. |
-| **Nerd Fonts Integration** | Rich iconography for directories, archives, media, and code file formats for faster visual identification. |
-| **Multi-Selection & Bulk Actions** | Select multiple files and apply copy, cut, paste, delete, and zip operations efficiently. |
-| **Persistent Pins** | Save frequently used directories to `~/.fm_pins` and jump back to them instantly. |
-| **Flicker-Free Rendering** | Optimized redraw behavior keeps the interface smooth while reducing unnecessary terminal updates. |
-| **Rich File Operations** | Create files/folders, rename entries, zip selections, copy absolute paths, and manage content without leaving the TUI. |
-| **Theme Support** | Customize the UI through `~/.config/fyzenor/colors.fz`, with optional Matugen-powered wallpaper theming. |
-| **Editor Integration** | Opens text/code files with your configured editor via `$EDITOR` or `$VISUAL`, with sensible fallbacks. |
+| Feature                            | Description                                                                                                                                           |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Three-Column Layout**            | Navigate with a Miller-style layout showing pinned items, parent/current directories, and a live preview pane.                                        |
+| **Async Media Preview**            | Generate image and video previews in the background using the Kitty Graphics Protocol and `ffmpeg`, without freezing navigation.                      |
+| **Modern & Polished UI**           | A clean, minimal interface featuring rounded corners, optimized spacing, and an elegant color palette designed for long-term readability and comfort. |
+| **Syntax-Aware Text Preview**      | Preview code and text files with `bat` or `batcat`, with fallback to plain text when needed.                                                          |
+| **Background Folder Sizing**       | Directory sizes are calculated asynchronously and update in place while you keep moving.                                                              |
+| **Vim-Style Navigation**           | Fast keyboard-driven navigation with `h`, `j`, `k`, `l`, `g`, `G`, arrow keys, and enter-based traversal.                                             |
+| **Nerd Fonts Integration**         | Rich iconography for directories, archives, media, and code file formats for faster visual identification.                                            |
+| **Multi-Selection & Bulk Actions** | Select multiple files and apply copy, cut, paste, delete, and zip operations efficiently.                                                             |
+| **Persistent Pins**                | Save frequently used directories to `~/.fm_pins` and jump back to them instantly.                                                                     |
+| **Flicker-Free Rendering**         | Optimized redraw behavior keeps the interface smooth while reducing unnecessary terminal updates.                                                     |
+| **Rich File Operations**           | Create files/folders, rename entries, zip selections, copy absolute paths, and manage content without leaving the TUI.                                |
+| **Theme Support**                  | Customize the UI through `~/.config/fyzenor/colors.fz`, with optional Matugen-powered wallpaper theming.                                              |
+| **Editor Integration**             | Opens text/code files with your configured editor via `$EDITOR` or `$VISUAL`, with sensible fallbacks.                                                |
 
 ---
 
@@ -245,10 +244,10 @@ matugen image /path/to/your/wallpaper.jpg
 
 Fyzenor supports the following command-line arguments:
 
-| Option | Description |
-| :--- | :--- |
-| `-v`, `--version` | Display the current version of Fyzenor. |
-| `-h`, `--help` | Show the help message and exit. |
+| Option              | Description                                            |
+| :------------------ | :----------------------------------------------------- |
+| `-v`, `--version`   | Display the current version of Fyzenor.                |
+| `-h`, `--help`      | Show the help message and exit.                        |
 | `--cwd-file <file>` | Write the final working directory to `<file>` on exit. |
 
 ```bash
@@ -328,43 +327,43 @@ Now run `f` instead of `fyzenor` to jump to the last visited directory after exi
 
 ### Navigation
 
-| Key | Action |
-| :--- | :--- |
-| `k` or `↑` | Move selection up |
-| `j` or `↓` | Move selection down |
-| `h` or `←` or `BS` | Go to parent directory |
+| Key                   | Action                          |
+| :-------------------- | :------------------------------ |
+| `k` or `↑`            | Move selection up               |
+| `j` or `↓`            | Move selection down             |
+| `h` or `←` or `BS`    | Go to parent directory          |
 | `l` or `→` or `Enter` | **Open file** / Enter directory |
-| `g` | Go to top of list |
-| `G` | Go to bottom of list |
+| `g`                   | Go to top of list               |
+| `G`                   | Go to bottom of list            |
 
 > **Note on Opening Files:** Fyzenor automatically detects text and code files and opens them using your terminal-based editor, respecting `$EDITOR`, `$VISUAL`, `nvim`, `nano`, then `vi`. Media files are opened with `mpv` if available, and other files use your system's default opener.
 
 ### File Operations
 
-| Key | Action |
-| :--- | :--- |
-| `y` | **Yank** (Copy) selected items to internal clipboard |
-| `x` | **Cut** selected items |
-| `p` | **Paste** items from clipboard |
-| `d` or `Delete` | **Delete** selected items with confirmation |
-| `r` | **Rename** current item |
-| `n` | Create **New File** |
-| `N` | Create **New Folder** |
-| `z` | **Zip** selected items into an archive |
-| `c` | **Copy Absolute Path** to system clipboard |
+| Key             | Action                                               |
+| :-------------- | :--------------------------------------------------- |
+| `y`             | **Yank** (Copy) selected items to internal clipboard |
+| `x`             | **Cut** selected items                               |
+| `p`             | **Paste** items from clipboard                       |
+| `d` or `Delete` | **Delete** selected items with confirmation          |
+| `r`             | **Rename** current item                              |
+| `n`             | Create **New File**                                  |
+| `N`             | Create **New Folder**                                |
+| `z`             | **Zip** selected items into an archive               |
+| `c`             | **Copy Absolute Path** to system clipboard           |
 
 ### Selection, View & Pins
 
-| Key | Action |
-| :--- | :--- |
-| `Space` or `v` | Toggle selection of current file |
-| `a` | Select **All** files in current directory |
-| `Esc` | **Clear** all active selections |
-| `.` | Toggle hidden files |
-| `s` | Toggle sorting by **Size** vs Name |
-| `P` | Pin current directory |
-| `Tab` | Toggle focus between **Files** and **Pins** |
-| `q` | Quit Fyzenor |
+| Key            | Action                                      |
+| :------------- | :------------------------------------------ |
+| `Space` or `v` | Toggle selection of current file            |
+| `a`            | Select **All** files in current directory   |
+| `Esc`          | **Clear** all active selections             |
+| `.`            | Toggle hidden files                         |
+| `s`            | Toggle sorting by **Size** vs Name          |
+| `P`            | Pin current directory                       |
+| `Tab`          | Toggle focus between **Files** and **Pins** |
+| `q`            | Quit Fyzenor                                |
 
 ### Pin Mode Controls
 
